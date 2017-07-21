@@ -19,14 +19,14 @@ node ./install.js
 ```
 
 What this installer is really doing is just grabbing a particular "blessed" (by
-this module) version of Phantom. As new versions of SFDX are released
+this module) version of SFDX. As new versions of SFDX are released
 and vetted, this module will be updated accordingly.
 
 Running via node
 ----------------
 
 The package exports a `path` string that contains the path to the
-phantomjs binary/executable.
+SFDX binary/executable.
 
 Below is an example of using this package via node.
 
@@ -50,8 +50,8 @@ childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
 Or `exec()` method is also provided for convenience:
 
 ```javascript
-var phantomjs = require('sfdx-prebuilt')
-var program = phantomjs.exec('force', '--help')
+var sfdx = require('sfdx-prebuilt')
+var program = sfdx.exec('force', '--help')
 program.stdout.pipe(process.stdout)
 program.stderr.pipe(process.stderr)
 program.on('exit', code => {
@@ -64,6 +64,6 @@ Note: [childProcess.spawn()](https://nodejs.org/api/child_process.html#child_pro
 Versioning
 ----------
 
-The major and minor number tracks the version of PhantomJS that will be
+The major and minor number tracks the version of SFDX that will be
 installed. The patch number is incremented when there is either an installer
 update or a patch build of the sfdx binary.
