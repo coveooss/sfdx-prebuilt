@@ -1,0 +1,55 @@
+{
+  "name": "salesforcedx-prebuilt",
+  "version": "5.7.6",
+  "keywords": [
+    "salesforce",
+    "dx",
+    "cli",
+    "install"
+  ],
+  "description": "Automatically install Salesforce DX",
+  "homepage": "https://github.com/coveo/sfdx-prebuilt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coveo/sfdx-prebuilt.git"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Marc-Antoine Veilleux",
+    "email": "maveilleux@coveo.com",
+    "url": "https://www.coveo.com"
+  },
+  "maintainers": [
+    {
+      "name": "Marc-Antoine Veilleux",
+      "email": "maveilleux@coveo.com",
+      "url": "https://www.coveo.com"
+    }
+  ],
+  "main": "lib/sfdxprebuilt",
+  "bin": {
+    "sfdxprebuilt": "./bin/sfdxprebuilt"
+  },
+  "scripts": {
+    "install": "node install.js",
+    "test": "nodeunit --reporter=minimal test/tests.js && eslint ."
+  },
+  "dependencies": {
+    "es6-promise": "~4.0.3",
+    "decompress": "~4.2.0",
+    "decompress-tarxz": "~2.1.0",
+    "fs-extra": "~1.0.0",
+    "hasha": "~2.2.0",
+    "kew": "~0.7.0",
+    "progress": "~1.1.8",
+    "request": "~2.79.0",
+    "request-progress": "~2.0.1",
+    "which": "~1.2.10",
+    "graceful-fs": "~4.1.11"
+  },
+  "devDependencies": {
+    "eslint": "2.7.0",
+    "nodeunit": "0.9.1",
+    "webdriverio": "~4.2.3"
+  }
+}

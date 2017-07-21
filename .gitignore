@@ -1,0 +1,4 @@
+node_modules/*
+lib/sfdxprebuilt/*
+lib/location.js
+package-lock.json
