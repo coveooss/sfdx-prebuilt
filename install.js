@@ -180,8 +180,8 @@ function trySFDXOnPath() {
 
 function installLib() {
   var deferred = kew.defer()
-  if(getTargetPlatform() === 'linux') {
-    var installer = path.resolve(pkgPath, '/install')
+  if(getTargetPlatform() === 'linux') {    
+    var installer = pkgPath + path.sep + 'install'
     console.log('Installing SFDX using ' + installer)
     cp.execSync(installer)
     deferred.resolve() 
