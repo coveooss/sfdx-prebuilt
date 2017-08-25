@@ -183,7 +183,13 @@ function installLib() {
   if(getTargetPlatform() === 'linux') {    
     var installer = pkgPath + path.sep + 'install'
     console.log('Installing SFDX using ' + installer)
-    cp.execSync(installer)
+    try {
+      cp.execSync(installer)
+    } catch(e) {
+      // Try using sudo.
+      cp.execSync('sudo ' + installer)
+    }
+    
     deferred.resolve() 
   } else {
     deferred.resolve()
