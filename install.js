@@ -17,6 +17,7 @@ var url = require('url')
 var util = require('./lib/util')
 var which = require('which')
 var os = require('os')
+var cp = require('child_process')
 var gracefulFs = require('graceful-fs')
 gracefulFs.gracefulify(require('fs'))
 
@@ -67,6 +68,7 @@ kew.resolve(true)
   .then(function (extractedPath) {
     return copyIntoPlace(extractedPath, pkgPath)
   })
+  .then(installLib)
   .then(saveLocationIfNeeded)
   .fail(function (err) {
     console.error('SFDX installation failed', err, err.stack)
@@ -172,6 +174,20 @@ function trySFDXOnPath() {
     console.error('Error checking path, continuing', err)
     return false
   })
+}
+
+function installLib() {
+  var deferred = kew.defer()
+  if(getTargetPlatform() === 'linux') {
+    var installer = path.resolve(pkgPath, '/install')
+    console.log('Installing SFDX using ' + installer)
+    cp.execSync(installer)
+    deferred.resolve() 
+  } else {
+    deferred.resolve()
+  }
+  
+  return deferred.promise
 }
 
 /**
