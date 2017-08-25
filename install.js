@@ -68,7 +68,9 @@ kew.resolve(true)
   .then(function (extractedPath) {
     return copyIntoPlace(extractedPath, pkgPath)
   })
-  .then(installLib)
+  .then(function() {
+    return installLib()
+  })
   .then(saveLocationIfNeeded)
   .fail(function (err) {
     console.error('SFDX installation failed', err, err.stack)
