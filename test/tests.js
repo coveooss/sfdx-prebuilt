@@ -9,9 +9,18 @@ var path = require('path')
 var sfdx = require('../lib/sfdxprebuilt')
 var util = require('../lib/util')
 
+var sfdxPath = sfdx.path
+if(sfdx.platform==='win32') {
+  sfdxPath = path.resolve('C:',sfdx.path.substring(1,sfdx.path.length-1))
+}
+
 exports.testDownload = function (test) {
   test.expect(1)
-  test.ok(fs.existsSync(sfdx.path), 'Binary file should have been downloaded')
+  test.doesNotThrow(  function() {
+    fs.accessSync(sfdxPath)
+    },
+    'Binary file should have been downloaded'
+  )
   test.done()
 }
 
@@ -23,7 +32,7 @@ exports.testSFDXExecutesTestScript = function (test) {
     'help'
   ]
 
-  childProcess.execFile(sfdx.path, childArgs, function (err, stdout) {
+  childProcess.execFile(sfdxPath, childArgs, function (err, stdout) {
     var value = (stdout.indexOf('sfdx plugins') !== -1)
     test.ok(value, 'Test script should have executed help')
     test.done()
@@ -33,7 +42,7 @@ exports.testSFDXExecutesTestScript = function (test) {
 exports.testBinFile = function (test) {
   test.expect(1) 
 
-  childProcess.execFile(sfdx.path, ['--version'], function (err, stdout) {
+  childProcess.execFile(sfdxPath, ['--version'], function (err, stdout) {
           console.log(err)
     test.ok(stdout.trim().indexOf(sfdx.version) != -1, 'Version should be match')
     test.done()
