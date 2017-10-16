@@ -1,6 +1,6 @@
 {
   "name": "sfdx-prebuilt",
-  "version": "5.7.12",
+  "version": "5.7.13",
   "keywords": [
     "salesforce",
     "dx",
@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "eslint": "2.7.0",
-    "nodeunit": "0.9.1",
+    "nodeunit": "0.11.1",
     "webdriverio": "~4.2.3"
   }
 }
