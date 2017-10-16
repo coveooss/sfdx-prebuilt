@@ -50,6 +50,7 @@ process.env.PATH = helper.cleanPath(originalPath)
 var libPath = path.join(__dirname, 'lib')
 var pkgPath = path.join(libPath, 'sfdxprebuilt')
 var sfdxPath = null
+var manifest;
 
 // If the user manually installed SFDX, we want
 // to use the existing version.
@@ -61,12 +62,13 @@ var sfdxPath = null
 // that can lead to weird circular dependencies between
 // local versions and global versions.
 kew.resolve(true)
+  .then(getManifestFromSalesforce)
   .then(trySFDXInLib)
   .then(trySFDXOnPath)
   .then(downloadSFDX)
   .then(extractDownload)
   .then(function (extractedPath) {
-    return copyIntoPlace(extractedPath, pkgPath)
+    return copyIntoPlace(extractedPath, pkgPath, manifest.version)
   })
   .then(function() {
     return installLib()
@@ -107,13 +109,18 @@ function saveLocationIfNeeded() {
     exit(0)
   }
 
+  function getManifestFromSalesforce() {
+    return helper.getManifest().then(sfManifest => {
+      manifest = sfManifest;
+    })
+  }
 
 /**
  * Check to see if the binary in lib is OK to use. If successful, exit the process.
  */
 function trySFDXInLib() {  
   return kew.fcall(function () {
-    return findValidSFDXBinary(path.resolve(__dirname, './lib/location.js'))
+    return findValidSFDXBinary(path.resolve(__dirname, './lib/location.js'), manifest.version)
   }).then(function (binaryLocation) {
     if (binaryLocation) {
       console.log('SFDX is previously installed at', binaryLocation)
@@ -151,7 +158,7 @@ function trySFDXOnPath() {
       console.log('Looks like an `npm install -g`')
 
       var sfdxLibPath = path.resolve(fs.realpathSync(sfdxPath), '../../lib/location')
-      return findValidSFDXBinary(sfdxLibPath)
+      return findValidSFDXBinary(sfdxLibPath, manifest.version)
       .then(function (binaryLocation) {
         if (binaryLocation) {
           writeLocationFile(binaryLocation)
@@ -161,7 +168,7 @@ function trySFDXOnPath() {
         console.log('Could not link global install, skipping...')
       })
     } else {
-      return checkSFDXVersion(sfdxPath).then(function (matches) {
+      return checkSFDXVersion(sfdxPath, manifest.version).then(function (matches) {
         if (matches) {
           writeLocationFile(sfdxPath)
           console.log('SFDX is already installed on PATH at', sfdxPath)
@@ -180,7 +187,7 @@ function trySFDXOnPath() {
 
 function installLib() {
   var deferred = kew.defer()
-  if(getTargetPlatform() === 'linux') {    
+  if(getTargetPlatform() === 'linux' || getTargetPlatform()  === 'darwin') {    
     var installer = pkgPath + path.sep + 'install'
     console.log('Installing SFDX using ' + installer)
     try {
@@ -204,7 +211,7 @@ function installLib() {
  * @return {Promise.<string>} The path to the downloaded file.
  */
 function downloadSFDX() {
-  var downloadSpec = getDownloadSpec()
+  var downloadSpec = getDownloadSpec(manifest)
   if (!downloadSpec) {
     console.error(
         'Unexpected platform or architecture: ' + getTargetPlatform() + '/' + getTargetArch() + '\n' +
@@ -467,18 +474,18 @@ function handleRequestError(error) {
  *     May return null if no download url exists.
  */
 function getDownloadUrl() {
-  var spec = getDownloadSpec()
+  var spec = getDownloadSpec(manifest)
   return spec && spec.url
 }
 
-function copyIntoPlace(extractedPath, targetPath) {
+function copyIntoPlace(extractedPath, targetPath, version) {
   console.log('Removing', targetPath)
   return kew.nfcall(fs.remove, targetPath).then(function () {
     // Look for the extracted directory, so we can rename it.
     var files = fs.readdirSync(extractedPath)
     for (var i = 0; i < files.length; i++) {
       var file = path.join(extractedPath, files[i])
-      if (fs.statSync(file).isDirectory() && file.indexOf(helper.version) != -1) {
+      if (fs.statSync(file).isDirectory() && file.indexOf(version) != -1) {
         console.log('Copying extracted folder', file, '->', targetPath)
         return kew.nfcall(fs.move, file, targetPath)
       }

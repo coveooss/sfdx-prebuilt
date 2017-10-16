@@ -52,7 +52,7 @@ exports.testCleanPath = function (test) {
 }
 
 exports.testBogusReinstallLocation = function (test) {
-  util.findValidSFDXBinary('./blargh')
+  util.findValidSFDXBinary('./blargh', '5.99.1-d7efd75')
   .then(function (binaryLocation) {
     test.ok(!binaryLocation, 'Expected link to fail')
     test.done()
@@ -60,7 +60,7 @@ exports.testBogusReinstallLocation = function (test) {
 }
 
 exports.testSuccessfulReinstallLocation = function (test) {
-  util.findValidSFDXBinary(path.resolve(__dirname, '../lib/location'))
+  util.findValidSFDXBinary(path.resolve(__dirname, '../lib/location'), '5.99.1-d7efd75')
   .then(function (binaryLocation) {
     test.ok(binaryLocation, 'Expected link to succeed')
     test.done()
