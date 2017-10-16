@@ -33,7 +33,7 @@ exports.testSFDXExecutesTestScript = function (test) {
   ]
 
   childProcess.execFile(sfdxPath, childArgs, function (err, stdout) {
-    var value = (stdout.indexOf('sfdx plugins') !== -1)
+    var value = (stdout.indexOf('force') !== -1)
     test.ok(value, 'Test script should have executed help')
     test.done()
   })
@@ -44,8 +44,10 @@ exports.testBinFile = function (test) {
 
   childProcess.execFile(sfdxPath, ['--version'], function (err, stdout) {
           console.log(err)
-    test.ok(stdout.trim().indexOf(sfdx.version) != -1, 'Version should be match')
-    test.done()
+    sfdx.getManifest().then(manifest => {
+      test.ok(stdout.trim().indexOf(manifest.version) != -1, 'Version should be match')
+      test.done()
+    })    
   })
 }
 
