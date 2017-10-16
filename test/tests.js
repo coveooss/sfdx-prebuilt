@@ -39,19 +39,6 @@ exports.testSFDXExecutesTestScript = function (test) {
   })
 }
 
-exports.testBinFile = function (test) {
-  test.expect(1) 
-
-  childProcess.execFile(sfdxPath, ['--version'], function (err, stdout) {
-          console.log(err)
-    sfdx.getManifest().then(manifest => {
-      test.ok(stdout.trim().indexOf(manifest.version) != -1, 'Version should be match')
-      test.done()
-    })    
-  })
-}
-
-
 exports.testCleanPath = function (test) {
   test.expect(5)
   test.equal('/Users/dan/bin', sfdx.cleanPath('/Users/dan/bin:./bin'))
