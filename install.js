@@ -110,7 +110,7 @@ function saveLocationIfNeeded() {
   }
 
   function getManifestFromSalesforce() {
-    return helper.getManifest().then(sfManifest => {
+    return helper.getManifest().then(function(sfManifest) {
       manifest = sfManifest;
     })
   }
