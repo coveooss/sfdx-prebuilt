@@ -50,7 +50,7 @@ process.env.PATH = helper.cleanPath(originalPath)
 var libPath = path.join(__dirname, 'lib')
 var pkgPath = path.join(libPath, 'sfdxprebuilt')
 var sfdxPath = null
-var manifest;
+var manifest
 
 // If the user manually installed SFDX, we want
 // to use the existing version.
@@ -111,7 +111,7 @@ function saveLocationIfNeeded() {
 
   function getManifestFromSalesforce() {
     return helper.getManifest().then(function(sfManifest) {
-      manifest = sfManifest;
+      manifest = sfManifest
     })
   }
 
