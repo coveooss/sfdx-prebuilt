@@ -54,7 +54,7 @@ var sfdx = require('sfdx-prebuilt')
 var program = sfdx.exec('force', '--help')
 program.stdout.pipe(process.stdout)
 program.stderr.pipe(process.stderr)
-program.on('exit', code => {
+program.on('exit', function(code) {
   // do something on end
 })
 ```

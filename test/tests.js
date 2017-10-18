@@ -33,22 +33,11 @@ exports.testSFDXExecutesTestScript = function (test) {
   ]
 
   childProcess.execFile(sfdxPath, childArgs, function (err, stdout) {
-    var value = (stdout.indexOf('sfdx plugins') !== -1)
+    var value = (stdout.indexOf('force') !== -1)
     test.ok(value, 'Test script should have executed help')
     test.done()
   })
 }
-
-exports.testBinFile = function (test) {
-  test.expect(1) 
-
-  childProcess.execFile(sfdxPath, ['--version'], function (err, stdout) {
-          console.log(err)
-    test.ok(stdout.trim().indexOf(sfdx.version) != -1, 'Version should be match')
-    test.done()
-  })
-}
-
 
 exports.testCleanPath = function (test) {
   test.expect(5)
@@ -61,7 +50,7 @@ exports.testCleanPath = function (test) {
 }
 
 exports.testBogusReinstallLocation = function (test) {
-  util.findValidSFDXBinary('./blargh')
+  util.findValidSFDXBinary('./blargh', '5.99.1-d7efd75')
   .then(function (binaryLocation) {
     test.ok(!binaryLocation, 'Expected link to fail')
     test.done()
@@ -69,7 +58,7 @@ exports.testBogusReinstallLocation = function (test) {
 }
 
 exports.testSuccessfulReinstallLocation = function (test) {
-  util.findValidSFDXBinary(path.resolve(__dirname, '../lib/location'))
+  util.findValidSFDXBinary(path.resolve(__dirname, '../lib/location'), '5.99.1-d7efd75')
   .then(function (binaryLocation) {
     test.ok(binaryLocation, 'Expected link to succeed')
     test.done()
