@@ -74,6 +74,7 @@ kew.resolve(true)
     return installLib()
   })
   .then(saveLocationIfNeeded)
+  .then(initSFDX)
   .fail(function (err) {
     console.error('SFDX installation failed', err, err.stack)
     exit(1)
@@ -104,9 +105,6 @@ function saveLocationIfNeeded() {
 
     var relativeLocation = path.relative(libPath, location)
     writeLocationFile(relativeLocation)
-
-    console.log('Done. sfdx binary available at', location)
-    exit(0)
   }
 
   function getManifestFromSalesforce() {
@@ -494,4 +492,18 @@ function copyIntoPlace(extractedPath, targetPath, version) {
     console.log('Could not find extracted file', files)
     throw new Error('Could not find extracted file')
   })
+}
+
+/**
+ * Update sfdx-cli to the latest version for initialization purpose for windows.
+ */
+function initSFDX() {
+  var location = getTargetPlatform() === 'win32' ?
+    path.join(pkgPath, 'bin', 'sfdx.exe') :
+    path.join(pkgPath, 'bin' ,'sfdx')
+  if (getTargetPlatform() === 'win32') {
+    cp.execSync(location + ' update')
+  }
+  console.log('Done. sfdx binary available at', location)
+  exit(0)
 }
