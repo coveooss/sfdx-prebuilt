@@ -502,7 +502,7 @@ function initSFDX() {
     path.join(pkgPath, 'bin', 'sfdx.exe') :
     path.join(pkgPath, 'bin' ,'sfdx')
   if (getTargetPlatform() === 'win32') {
-    cp.execSync(location + ' update')
+    cp.execSync(location + ' force')
   }
   console.log('Done. sfdx binary available at', location)
   exit(0)
